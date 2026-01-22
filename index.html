@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sultan Almotiri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0b;
+            --bg-card: #111113;
+            --bg-hover: #1a1a1d;
+            --border: #222225;
+            --border-hover: #333338;
+            --text: #fafafa;
+            --text-secondary: #888890;
+            --text-muted: #555560;
+            --accent: #64ffda;
+            --accent-dim: rgba(100, 255, 218, 0.1);
+            --accent-glow: rgba(100, 255, 218, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: var(--bg); }
+
+        /* Cursor follower */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float-particle 20s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .name span { 
+            color: var(--accent);
+            position: relative;
+        }
+
+        /* Glitch effect on name hover */
+        .name:hover span {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(2px, 2px); }
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+            overflow: hidden;
+        }
+
+        .tagline-text {
+            display: inline-block;
+            animation: slideIn 0.6s ease 0.3s both;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            animation: fadeInUp 0.8s ease 0.2s both;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .header-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .header-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease calc(0.4s + var(--i) * 0.1s) both;
+        }
+
+        .header-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .header-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 30px -10px var(--accent-glow);
+        }
+
+        .header-link:hover::before { opacity: 1; }
+
+        .header-link svg { 
+            width: 18px; 
+            height: 18px; 
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-link:hover svg {
+            transform: rotate(-12deg) scale(1.1);
+        }
+
+        .header-link span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: scale(0);
+            animation: ripple-effect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-effect {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: cardReveal 0.6s ease calc(0.5s + var(--i) * 0.1s) both;
+        }
+
+        @keyframes cardReveal {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Shine effect */
+        .bento-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 255, 255, 0.03) 50%,
+                transparent 60%
+            );
+            transform: translateX(-100%);
+            transition: none;
+        }
+
+        .bento-card:hover::after {
+            transform: translateX(100%);
+            transition: transform 0.8s ease;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 
+                0 20px 40px -20px rgba(0, 0, 0, 0.5),
+                0 0 60px -30px var(--accent-glow);
+        }
+
+        .bento-card:hover::before { opacity: 1; }
+
+        .bento-card > * { position: relative; z-index: 1; }
+
+        /* Card sizes */
+        .card-wide { grid-column: span 2; }
+        .card-tall { grid-row: span 2; }
+
+        /* Card header */
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-hover);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+        }
+
+        .bento-card:hover .card-icon {
+            transform: scale(1.1) rotate(-8deg);
+            background: var(--accent-dim);
+            color: var(--accent);
+            box-shadow: 0 8px 20px -8px var(--accent-glow);
+        }
+
+        .card-expand {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .card-expand {
+            color: var(--accent);
+            background: var(--accent-dim);
+            transform: rotate(45deg);
+        }
+
+        .card-expand svg { width: 18px; height: 18px; }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .card-title {
+            transform: translateX(4px);
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* About card - code style */
+        .code-block {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .code-block {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .code-line { 
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .code-line {
+            transform: translateX(4px);
+        }
+
+        .bento-card:hover .code-line:nth-child(2) { transition-delay: 0.02s; }
+        .bento-card:hover .code-line:nth-child(3) { transition-delay: 0.04s; }
+        .bento-card:hover .code-line:nth-child(4) { transition-delay: 0.06s; }
+        .bento-card:hover .code-line:nth-child(5) { transition-delay: 0.08s; }
+
+        .code-key { color: #7ee787; }
+        .code-string { color: #a5d6ff; }
+        .code-bracket { color: var(--text-muted); }
+
+        /* Skills card */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            padding: 6px 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background: var(--accent-dim);
+            color: var(--accent);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px -8px var(--accent-glow);
+        }
+
+        /* Staggered animation for skills */
+        .bento-card:hover .skill-tag:nth-child(1) { transition-delay: 0s; }
+        .bento-card:hover .skill-tag:nth-child(2) { transition-delay: 0.02s; }
+        .bento-card:hover .skill-tag:nth-child(3) { transition-delay: 0.04s; }
+        .bento-card:hover .skill-tag:nth-child(4) { transition-delay: 0.06s; }
+        .bento-card:hover .skill-tag:nth-child(5) { transition-delay: 0.08s; }
+
+        /* Experience mini */
+        .exp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .exp-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            padding: 8px;
+            margin: -8px;
+            border-radius: 8px;
+        }
+
+        .exp-item:hover {
+            background: var(--bg-hover);
+            transform: translateX(8px);
+        }
+
+        .exp-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 0 var(--accent-glow);
+        }
+
+        .exp-item:hover .exp-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .exp-info { flex: 1; }
+        .exp-title { 
+            font-size: 0.9rem; 
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .exp-item:hover .exp-title { color: var(--accent); }
+        .exp-company { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Project cards */
+        .project-preview {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 2rem;
+            color: var(--text-muted);
+            transition: all 0.4s ease;
+        }
+
+        .bento-card:hover .project-preview {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .project-name { 
+            font-weight: 600; 
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .project-name {
+            transform: translateX(4px);
+        }
+
+        .project-desc { 
+            font-size: 0.85rem; 
+            color: var(--text-secondary);
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .project-tech span {
+            padding: 4px 10px;
+            background: var(--bg);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .project-tech span {
+            background: rgba(100, 255, 218, 0.15);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-hover);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--accent-dim);
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 28px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Modal content styles */
+        .modal-section {
+            margin-bottom: 28px;
+            animation: fadeInUp 0.5s ease calc(var(--i) * 0.1s) both;
+        }
+
+        .modal-section:last-child { margin-bottom: 0; }
+
+        .modal-section-title {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .modal-code {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 24px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 2;
+        }
+
+        .exp-card {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .exp-card:hover {
+            transform: translateX(8px);
+            background: var(--bg-hover);
+        }
+
+        .exp-card:last-child { margin-bottom: 0; }
+
+        .exp-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .exp-card-title { font-weight: 600; font-size: 1.1rem; }
+        .exp-card-company { color: var(--accent); font-size: 0.95rem; }
+        .exp-card-date { font-size: 0.8rem; color: var(--text-muted); font-family: 'Fira Code', monospace; }
+
+        .exp-card-list {
+            list-style: none;
+        }
+
+        .exp-card-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .exp-card-list li:hover {
+            color: var(--text);
+            transform: translateX(4px);
+        }
+
+        .exp-card-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .exp-card-list li:hover::before {
+            width: 12px;
+        }
+
+        .skills-section {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .skills-section:hover {
+            background: var(--bg-hover);
+        }
+
+        .skills-section:last-child { margin-bottom: 0; }
+
+        .skills-section-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 14px;
+            color: var(--text-secondary);
+        }
+
+        .skills-section-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skills-section-tags span {
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skills-section-tags span:hover {
+            background: var(--accent-dim);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px;
+            background: var(--bg);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .contact-item:hover::before { opacity: 1; }
+
+        .contact-item svg {
+            width: 26px;
+            height: 26px;
+            color: var(--accent);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-item:hover svg {
+            transform: scale(1.15) rotate(-8deg);
+        }
+
+        .contact-item-text {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-item-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .contact-item-value {
+            font-size: 0.9rem;
+        }
+
+        /* Magnetic effect for buttons */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-wide { grid-column: span 1; }
+            .header-top { flex-direction: column; gap: 16px; }
+            .header-links { flex-wrap: wrap; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .name { font-size: 2rem; }
+            .cursor-glow { display: none; }
+        }
+
+                /* Footer */
+        .footer {
+            text-align: center;
+            padding: 48px 24px 32px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 1s both;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .footer a:hover::after {
+            width: 100%;
+        }
+
+        .footer a:hover {
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+    <!-- Cursor glow follower -->
+    <div class="cursor-glow" id="cursor-glow"></div>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div>
+                    <h1 class="name">Sultan <span>Almotiri</span></h1>
+                    <p class="tagline"><span class="tagline-text">CS Student at Arizona State University</span></p>
+                </div>
+                <div class="status-badge magnetic">
+                    <span class="status-dot"></span>
+                    Open to opportunities
+                </div>
+            </div>
+            <div class="header-links">
+                <a href="mailto:sultabalmotiri@gmail.com" class="header-link magnetic" style="--i: 0">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <span>Email</span>
+                </a>
+                <a href="https://linkedin.com/in/sultan-almotiri1" target="_blank" class="header-link magnetic" style="--i: 1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/sulatinooo" target="_blank" class="header-link magnetic" style="--i: 2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                    <span>GitHub</span>
+                </a>
+                <a href="tel:659-253-8966" class="header-link magnetic" style="--i: 3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                    <span>Call</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="bento-grid">
+            <!-- About Card -->
+            <div class="bento-card card-wide" style="--i: 0" onclick="openModal('about')">
+                <div class="card-header">
+                    <div class="card-icon">{ }</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">About Me</div>
+                <div class="card-subtitle">Click to expand</div>
+                <div class="code-block" style="margin-top: 16px;">
+                    <span class="code-line"><span class="code-bracket">{</span></span>
+                    <span class="code-line">  <span class="code-key">"role"</span>: <span class="code-string">"CS Student"</span>,</span>
+                    <span class="code-line">  <span class="code-key">"interests"</span>: <span class="code-string">["backend", "systems"]</span>,</span>
+                    <span class="code-line">  <span class="code-key">"status"</span>: <span class="code-string">"shipping code"</span></span>
+                    <span class="code-line"><span class="code-bracket">}</span></span>
+                </div>
+            </div>
+
+            <!-- Skills Card -->
+            <div class="bento-card" style="--i: 1" onclick="openModal('skills')">
+                <div class="card-header">
+                    <div class="card-icon">&lt;/&gt;</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Skills</div>
+                <div class="card-subtitle">Tech stack</div>
+                <div class="skills-grid" style="margin-top: 16px;">
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">SQL</span>
+                </div>
+            </div>
+
+            <!-- Experience Card -->
+            <div class="bento-card card-tall" style="--i: 2" onclick="openModal('experience')">
+                <div class="card-header">
+                    <div class="card-icon">~/$</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Experience</div>
+                <div class="card-subtitle">Where I've worked</div>
+                <div class="exp-list" style="margin-top: 20px;">
+                    <div class="exp-item">
+                        <div class="exp-dot"></div>
+                        <div class="exp-info">
+                            <div class="exp-title">IT Support Specialist</div>
+                            <div class="exp-company">ASU - Current</div>
+                        </div>
+                    </div>
+                    <div class="exp-item">
+                        <div class="exp-dot" style="opacity: 0.6;"></div>
+                        <div class="exp-info">
+                            <div class="exp-title">Software Engineer Intern</div>
+                            <div class="exp-company">PCSS - 2025</div>
+                        </div>
+                    </div>
+                    <div class="exp-item">
+                        <div class="exp-dot" style="opacity: 0.3;"></div>
+                        <div class="exp-info">
+                            <div class="exp-title">CS Tutor</div>
+                            <div class="exp-company">ASU - 2025</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 1 -->
+            <div class="bento-card" style="--i: 3" onclick="openModal('rag')">
+                <div class="card-header">
+                    <div class="card-icon">db</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="project-name">RAG Agent</div>
+                <div class="project-desc">AI compliance assistant for banks</div>
+                <div class="project-tech">
+                    <span>Python</span>
+                    <span>RAG</span>
+                    <span>OpenAI</span>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="bento-card" style="--i: 4" onclick="openModal('dsa')">
+                <div class="card-header">
+                    <div class="card-icon">[ ]</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="project-name">DSA Master</div>
+                <div class="project-desc">Learning platform with 200+ problems</div>
+                <div class="project-tech">
+                    <span>React</span>
+                    <span>Node.js</span>
+                    <span>PostgreSQL</span>
+                </div>
+            </div>
+
+            <!-- Contact Card -->
+            <div class="bento-card" style="--i: 5" onclick="openModal('contact')">
+                <div class="card-header">
+                    <div class="card-icon">@</div>
+                    <div class="card-expand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Contact</div>
+                <div class="card-subtitle">Let's connect</div>
+                <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
+                    Click to see all contact methods and social links
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>Built by</span> <a href="https://github.com/sulatinooo" target="_blank">Sultan</a>
+        </footer>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+    <!-- About Modal -->
+    <div class="modal" id="modal-about">
+        <div class="modal-header">
+            <h2 class="modal-title">About Me</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-code">
+                <span class="code-line"><span class="code-bracket">const</span> sultan = {</span>
+                <span class="code-line">  <span class="code-key">name</span>: <span class="code-string">"Sultan Almotiri"</span>,</span>
+                <span class="code-line">  <span class="code-key">role</span>: <span class="code-string">"CS Student"</span>,</span>
+                <span class="code-line">  <span class="code-key">school</span>: <span class="code-string">"Arizona State University"</span>,</span>
+                <span class="code-line">  <span class="code-key">gradYear</span>: <span class="code-string">2027</span>,</span>
+                <span class="code-line"></span>
+                <span class="code-line">  <span class="code-key">interests</span>: [</span>
+                <span class="code-line">    <span class="code-string">"backend development"</span>,</span>
+                <span class="code-line">    <span class="code-string">"systems programming"</span>,</span>
+                <span class="code-line">    <span class="code-string">"automation"</span>,</span>
+                <span class="code-line">    <span class="code-string">"infrastructure"</span></span>
+                <span class="code-line">  ],</span>
+                <span class="code-line"></span>
+                <span class="code-line">  <span class="code-key">achievements</span>: [</span>
+                <span class="code-line">    <span class="code-string">"Dean's List: Spring '24, Fall '24, Spring '25"</span></span>
+                <span class="code-line">  ],</span>
+                <span class="code-line"></span>
+                <span class="code-line">  <span class="code-key">lateNightFuel</span>: <span class="code-string">"coffee"</span>,</span>
+                <span class="code-line">  <span class="code-key">status</span>: <span class="code-string">"shipping code & breaking prod"</span>,</span>
+                <span class="code-line">  <span class="code-key">hireable</span>: <span class="code-string">true</span></span>
+                <span class="code-line">};</span>
+                <span class="code-line"></span>
+                <span class="code-line"><span class="code-comment">// currently debugging life</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Modal -->
+    <div class="modal" id="modal-skills">
+        <div class="modal-header">
+            <h2 class="modal-title">Skills & Technologies</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="skills-section" style="--i: 0">
+                <div class="skills-section-title">Languages</div>
+                <div class="skills-section-tags">
+                    <span>JavaScript</span>
+                    <span>Python</span>
+                    <span>C/C++</span>
+                    <span>SQL</span>
+                    <span>C#</span>
+                    <span>HTML/CSS</span>
+                </div>
+            </div>
+            <div class="skills-section" style="--i: 1">
+                <div class="skills-section-title">Frameworks & Libraries</div>
+                <div class="skills-section-tags">
+                    <span>React</span>
+                    <span>Node.js</span>
+                    <span>FastAPI</span>
+                    <span>Tailwind CSS</span>
+                    <span>Express</span>
+                </div>
+            </div>
+            <div class="skills-section" style="--i: 2">
+                <div class="skills-section-title">Databases</div>
+                <div class="skills-section-tags">
+                    <span>PostgreSQL</span>
+                    <span>Supabase</span>
+                    <span>pgvector</span>
+                </div>
+            </div>
+            <div class="skills-section" style="--i: 3">
+                <div class="skills-section-title">DevOps & Tools</div>
+                <div class="skills-section-tags">
+                    <span>Linux</span>
+                    <span>Docker</span>
+                    <span>Git</span>
+                    <span>CI/CD</span>
+                    <span>PowerShell</span>
+                    <span>Active Directory</span>
+                </div>
+            </div>
+            <div class="skills-section" style="--i: 4">
+                <div class="skills-section-title">AI & ML</div>
+                <div class="skills-section-tags">
+                    <span>OpenAI API</span>
+                    <span>LangChain</span>
+                    <span>RAG</span>
+                    <span>Embeddings</span>
+                    <span>NLP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Modal -->
+    <div class="modal" id="modal-experience">
+        <div class="modal-header">
+            <h2 class="modal-title">Experience</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="exp-card" style="--i: 0">
+                <div class="exp-card-header">
+                    <div>
+                        <div class="exp-card-title">IT Support Specialist</div>
+                        <div class="exp-card-company">Arizona State University</div>
+                    </div>
+                    <div class="exp-card-date">Aug 2025 - Present</div>
+                </div>
+                <ul class="exp-card-list">
+                    <li>Managed Active Directory for 300+ users, handling access control and security groups</li>
+                    <li>Built Group Policies that cut lab setup and maintenance time by 70%</li>
+                    <li>Wrote PowerShell scripts for batch software deployment across 300+ machines</li>
+                    <li>Maintained 99%+ uptime for executive and critical operations systems</li>
+                </ul>
+            </div>
+            <div class="exp-card" style="--i: 1">
+                <div class="exp-card-header">
+                    <div>
+                        <div class="exp-card-title">Software Engineer Intern</div>
+                        <div class="exp-card-company">Project Control Systems Solutions</div>
+                    </div>
+                    <div class="exp-card-date">May 2025 - Aug 2025</div>
+                </div>
+                <ul class="exp-card-list">
+                    <li>Rebuilt API endpoints and database queries to move data 30% faster</li>
+                    <li>Shipped live dashboards that saved teams 10+ hours monthly on manual reports</li>
+                    <li>Refactored backend services reducing processing delays by 25%</li>
+                </ul>
+            </div>
+            <div class="exp-card" style="--i: 2">
+                <div class="exp-card-header">
+                    <div>
+                        <div class="exp-card-title">Computer Science Tutor</div>
+                        <div class="exp-card-company">Arizona State University</div>
+                    </div>
+                    <div class="exp-card-date">Jan 2025 - May 2025</div>
+                </div>
+                <ul class="exp-card-list">
+                    <li>Mentored 10+ students weekly in Data Structures and Algorithms</li>
+                    <li>Created 50+ visual explanations covering sorting, graphs, and complexity analysis</li>
+                    <li>Achieved 85% student confidence improvement and 18% average exam score increase</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAG Project Modal -->
+    <div class="modal" id="modal-rag">
+        <div class="modal-header">
+            <h2 class="modal-title">RAG Compliance Agent</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-section" style="--i: 0">
+                <div class="modal-section-title">Overview</div>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    AI-powered compliance assistant built for Bank AlJazira and Al Rajhi. Helps executives and compliance teams search through regulatory content instantly using natural language queries.
+                </p>
+            </div>
+            <div class="modal-section" style="--i: 1">
+                <div class="modal-section-title">Key Features</div>
+                <ul class="exp-card-list">
+                    <li>Custom RAG pipeline using OpenAI embeddings for semantic search</li>
+                    <li>pgvector integration for fast vector similarity lookups</li>
+                    <li>WhatsApp integration for conversational access</li>
+                    <li>Sub 3-second response times</li>
+                    <li>Replaced manual PDF searches as primary compliance reference</li>
+                </ul>
+            </div>
+            <div class="modal-section" style="--i: 2">
+                <div class="modal-section-title">Tech Stack</div>
+                <div class="skills-section-tags">
+                    <span>Python</span>
+                    <span>RAG</span>
+                    <span>OpenAI API</span>
+                    <span>PostgreSQL</span>
+                    <span>pgvector</span>
+                    <span>LangChain</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DSA Project Modal -->
+    <div class="modal" id="modal-dsa">
+        <div class="modal-header">
+            <h2 class="modal-title">DSA Master</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-section" style="--i: 0">
+                <div class="modal-section-title">Overview</div>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    Full-stack educational platform designed to help students master data structures and algorithms through active recall and gamification.
+                </p>
+            </div>
+            <div class="modal-section" style="--i: 1">
+                <div class="modal-section-title">Key Features</div>
+                <ul class="exp-card-list">
+                    <li>200+ curated DSA questions with detailed explanations</li>
+                    <li>Gamification system with XP, achievements, and streaks</li>
+                    <li>Progress tracking and leaderboards</li>
+                    <li>Hints system with virtual currency</li>
+                    <li>Active recall methodology to boost retention</li>
+                </ul>
+            </div>
+            <div class="modal-section" style="--i: 2">
+                <div class="modal-section-title">Tech Stack</div>
+                <div class="skills-section-tags">
+                    <span>React.js</span>
+                    <span>Node.js</span>
+                    <span>PostgreSQL</span>
+                    <span>Tailwind CSS</span>
+                    <span>Axios</span>
+                    <span>Render</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal" id="modal-contact">
+        <div class="modal-header">
+            <h2 class="modal-title">Get in Touch</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.8;">
+                I'm currently looking for internship opportunities and always interested in hearing about new projects. Feel free to reach out!
+            </p>
+            <div class="contact-grid">
+                <a href="mailto:sultabalmotiri@gmail.com" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">Email</div>
+                        <div class="contact-item-value">sultabalmotiri@gmail.com</div>
+                    </div>
+                </a>
+                <a href="tel:659-253-8966" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">Phone</div>
+                        <div class="contact-item-value">659-253-8966</div>
+                    </div>
+                </a>
+                <a href="https://linkedin.com/in/sultan-almotiri1" target="_blank" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">LinkedIn</div>
+                        <div class="contact-item-value">sultan-almotiri1</div>
+                    </div>
+                </a>
+                <a href="https://github.com/sulatinooo" target="_blank" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">GitHub</div>
+                        <div class="contact-item-value">sulatinooo</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cursor glow follower
+        const cursorGlow = document.getElementById('cursor-glow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateGlow() {
+            glowX += (mouseX - glowX) * 0.1;
+            glowY += (mouseY - glowY) * 0.1;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Magnetic effect
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Card 3D tilt
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 15;
+                const rotateY = (centerX - x) / 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // Ripple effect on links
+        document.querySelectorAll('.header-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Modal functions
+        function openModal(id) {
+            document.getElementById('modal-overlay').classList.add('active');
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            document.body.style.overflow = '';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Intersection observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.style.animationPlayState = 'paused';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
